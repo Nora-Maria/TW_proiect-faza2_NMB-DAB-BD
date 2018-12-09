@@ -16,5 +16,10 @@
   "bugs": {
     "url": "https://github.com/Nora-Maria/TW_proiect-faza2_NMB-DAB-BD/issues"
   },
-  "homepage": "https://github.com/Nora-Maria/TW_proiect-faza2_NMB-DAB-BD#readme"
+  "homepage": "https://github.com/Nora-Maria/TW_proiect-faza2_NMB-DAB-BD#readme",
+  "dependencies": {
+    "express": "^4.16.4",
+    "mysql2": "^1.6.4",
+    "sequelize": "^4.41.2"
+  }
 }
