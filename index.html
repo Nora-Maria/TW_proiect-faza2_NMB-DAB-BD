@@ -11,28 +11,135 @@
                line-height:1.2em;
                margin:0;
                padding:12px
-               
-              
            }
-           
-           
-           
        </style>
         
     </head>
+    
     <body>
-        <h1> Scopul aplicatiei:  </h1>
-        <h2> Regasirea cu usurinta a cartilor si posibilitatea achizitionarii lor .</h2>
-         
+        <h1> Bine ati venit ! </h1>
+        <h2> Scopul aplicatiei:  </h2>
+        <h3> Regasirea cu usurinta a cartilor si posibilitatea achizitionarii lor .</h3>
+        
         <img src= "/TW_proiect-faza2_NMB-DAB-BD/public/images/7-Inspiring-books.jpg"/>
+        <a href="https://proiect-faza2-noramaria28.c9users.io/TW_proiect-faza2_NMB-DAB-BD/index.html"> Pagina mea </a>
         
-         <a href="https://proiect-faza2-noramaria28.c9users.io/TW_proiect-faza2_NMB-DAB-BD/index.html"> Pagina mea </a>
         
-      
+       
+        
+        
+    <table>
+        <caption class="biblioteca">Biblioteca personala </caption>
+        <thead class="ion maria">
+            <tr> 
+                <th>  Nr crt:      </th>
+                <th>  Nume carte:      </th>
+                <th>  Pret:      </th>
+                <th>  Rating(1-5):      </th>
+              
+               
+            </tr>
+       </thead>            
+           
+        
+        <tbody>
+            
+             <tr>
+                 <td> 1 </td>
+                <td> Delia's How to Cook:(Bk.1) </td>
+                <td> 30 </td>
+                <td> 4 </td>
+                
+            </tr>
+            <tr>
+                <td> 2 </td>
+                <td> Harry Potter and the Order of the Phoenix </td>
+                <td> 35 </td>
+                <td> 5 </td>
+            </tr>
+             <tr>
+                <td> 3 </td>
+                <td> Notes from a Small Island </td>
+                <td> 25 </td>
+                <td> 5 </td>
+            </tr>
+           
+        </tbody>
+        <tfoot>
+            
+        </tfoot>
+    </table>
+    
+    
+     <form action="#" class="controls">
+         
+          <label for="nrCrtCarte">Nr crt:</label>
+        <input name="nrCrtCarte" id="nrCrtCarte">
+        
+        <label for="numeCarte">Nume:</label>
+        <input name="numeCarte" id="numeCarte">
+        
+        <label for="pretCarte">Pret:</label>
+        <input name="pretCarte" id="pretCarte">
+        
+        <label for="ratingCarte">Rating:</label>
+        <input name="ratingCarte" id="ratingCarte">
+        
+        <input type="button" name="btnAdauga" value="Adaugă">
+    </form> 
+    
+    
+    
+    
+    
+     <script type="text/javascript">
+        function adaugaCarte(nrCrtCarte, numeCarte, pretCarte, ratingCarte) {
+           
+        }
+
+        function actiuneButon(){
+            let nrCrtCarte=document.querySelector('#nrCrtCarte').value;
+            let numeCarte= document.querySelector("#numeCarte").value;
+            let pretCarte= document.querySelector("#pretCarte").value;
+            let ratingCarte= document.querySelector("#ratingCarte").value;
+
+            let tbody = document.querySelector("tbody");
+            let tr=document.createElement("tr");
+
+            let adaugaCelula =function(valoare){
+                let td1=document.createElement("td");          
+                td1.innerText=valoare;
+                tr.appendChild(td1);
+            }
+
+            adaugaCelula(nrCrtCarte);
+            adaugaCelula(numeCarte);
+            adaugaCelula(pretCarte);
+            adaugaCelula(ratingCarte);
+            tbody.appendChild(tr);
+
+        }
+        
+               document.addEventListener("DOMContentLoaded", function(){
+            document.querySelector("input[name='btnAdauga']").addEventListener("click", actiuneButon);
+
+            
+        });
+        
+       </script>
+    
+    Categorie: 
+ 
+    
+      <select name="Categorie">
+  <option value="fictiune">Fictiune</option>
+  <option value="tehnologie">Tehnologie</option>
+  <option value="psihologie">Psihologie</option>
+   <option value="dezvoltarePersonala">Dezvoltare personala</option>
+  
+        
+        
     </body>
-    
-    
-    
     
     
     
