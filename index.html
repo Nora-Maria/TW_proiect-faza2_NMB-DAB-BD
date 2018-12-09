@@ -91,7 +91,7 @@
      <script type="text/javascript">
        
 
-        function actiuneButon(){
+        function adaugaButon(){
             let nrCrtCarte=document.querySelector('#nrCrtCarte').value;
             let numeCarte= document.querySelector("#numeCarte").value;
             let pretCarte= document.querySelector("#pretCarte").value;
@@ -100,22 +100,22 @@
             let tbody = document.querySelector("tbody");
             let tr=document.createElement("tr");
 
-            let adaugaCelula =function(valoare){
+            let adauga =function(valoare){
                 let td1=document.createElement("td");          
                 td1.innerText=valoare;
                 tr.appendChild(td1);
             }
 
-            adaugaCelula(nrCrtCarte);
-            adaugaCelula(numeCarte);
-            adaugaCelula(pretCarte);
-            adaugaCelula(ratingCarte);
+            adauga(nrCrtCarte);
+            adauga(numeCarte);
+            adauga(pretCarte);
+            adauga(ratingCarte);
             tbody.appendChild(tr);
 
         }
         
                document.addEventListener("DOMContentLoaded", function(){
-            document.querySelector("input[name='btnAdauga']").addEventListener("click", actiuneButon);
+            document.querySelector("input[name='btnAdauga']").addEventListener("click", adaugaButon);
             
         });
         
