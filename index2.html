@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Biblioteca Personala</title>
+        <style>
+        h1{
+            color:#4A235A;
+        }
+        h2 {
+            color:#633974;
+        }
+        table, th, td {
+            border: 1px solid black;
+        }
+        #table {
+            display: flex;
+            justify-content: space-around;
+        }
+        #viewerCanvas {
+            margin: 0 auto;
+            display: inline-block;
+            margin-bottom: 70px;
+        }
+        </style>
+    </head>
+    <body style="background-color:#bbff99; font-family:georgia; text-align:center;">
+        <h1>Carti</h1>
+        <br></br>
+    <p style="color:#A569BD;">Cu ajutorul acestei pagini, puteti vizualiza intr-un mod interactiv, edita, sterge sau adauga carti noi. Va multumim si spor la citit!</strong></p>
+    <p style="color:#A569BD;"><strong>Proiect realizat de <i>Baduna Nora-Maria, Baduna Dana-Andreea, David Ioan-Bogdan</i> (grupa 1065)</strong></p>
+    <br></br>
+
+    <br></br>
+
+    <h2>Lista carti</h2>
+<!--spatiu tabel date -->
+<div id="table"></div>
+
+<!--formular de salvare carti-->
+ <form onSubmit="saveCarti(event)">
+  <input type="number" name="id_best_seller" id="id_best_seller" /><br />
+ ID Autor:<br />
+  <input type="number" name="id_autor" id="id_autor" /><br />
+ Nume Best Seller:<br />
+  <input type="text" name="nume_best_seller" id="nume_best_seller" ><br/>
+ 
+  
+  <input type="submit" value="Salveaza best seller">
+  <input type="reset" value="Renunta">
+</form>
+<br></br>
+<br></br>
+<br></br>
+
+    <h2>Vizualizare Interactiva Carti</h2>
+    <br></br>
+<!--spatiu viewer Google Books-->
+<div id="viewerCanvas" style="width: 400px; height: 515px;"></div>
+
+
+<script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+
+<!--Google Books embedded API-->
+<script type="text/javascript" src="https://www.google.com/books/jsapi.js"></script>
+
+<script 
+    src="https://code.jquery.com/jquery-3.3.1.min.js"
+    integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8="
+    crossorigin="anonymous"></script>
+
+  <script type="text/javascript">
+  
+    // functie temporizator pagina de 10 secunde
+    google.books.load(); 
+    function nextStep(viewer) {
+    window.setTimeout(function() {
+    viewer.nextPage();
+    nextStep(viewer);
+  }, 10000);
+}
+
+    // functie viewer carti prin google books
+    function initialize() {
+    var viewer = new google.books.DefaultViewer(document.getElementById('viewerCanvas'));
+    viewer.load('ISBN:1118008189');
+    nextStep(viewer);
+}
+
+    google.books.setOnLoadCallback(initialize);
+   
+            function showCarti() {
+                axios.get('/Best_seller').then(function(results) {
+                    
+                    let html = ` <table style="width:900px; background-color:#FAE5D3;">
+                            <tr>
+                                <th style="color:#512E5F;">ID Autor</th>
+                                <th style="color:#512E5F;">ID Best Seller</th>
+                                <th style="color:#512E5F;">Nume Best Seller:</th> 
+                              
+                            </tr>`
+                    
+                    results.data.forEach(function(element) {
+                        html += `<tr>
+                                    <td style="color:#76448A;">${element.id_autor}</td>
+                                    <td style="color:#76448A;">${element.id_best_seller}</td>
+                                    <td style="color:#76448A;">${element.nume_best_seller}</td>
+                                   
+                                    <td>
+                                        <button style="color:#6E2C00;" onClick="editCarti(${element.id_autor})">Edit</button>
+                                        <button style="color:#6E2C00;" onClick="deleteCarti(${element.id_autor})">Delete</button>
+                                    </td>
+                                </tr>`
+                    })
+                    html += `</table>`
+                    
+                    $('#table').html(html)
+                }).catch(function(error) {
+                    console.log(error)
+                })
+            }
+            
+            function saveCarti(event) {
+                event.preventDefault()
+                
+                //get values from fields
+                let id_autor = $('#id_autor').val()
+                let id_best_seller = $('#id_best_seller').val()
+                let nume_best_seller = $('#nume_best_seller').val()
+            
+                
+                if(id_autor) {
+                    axios.put('/Best_seller/'+id_autor, {
+                        id_best_seller: id_best_seller,
+                        nume_best_seller: nume_best_seller
+                      
+                    }).then(function(result) {
+                        showCarti()
+                        $(event.target).trigger("reset")
+                    }).catch(function(err) {
+                        alert('Resource could not be saved')
+                    })
+                } else {
+                    //make a request to POST /messages
+                    axios.post('/Best_seller', {
+                       id_best_seller: id_best_seller,
+                        nume_best_seller: nume_best_seller
+                    }).then(function(result) {
+                        showCarti()
+                        $(event.target).trigger("reset")
+                    }).catch(function(err) {
+                        alert('Resource could not be saved')
+                    })
+                }
+            }
+            
+            function editCarti(id) {
+                //get the values from the server
+                axios.get('/Best_seller/'+id).then(function(result) {
+                    //display values in the form
+                    $('#id_autor').val(result.data.id_autor)
+                    $('#id_best_seller').val(result.data.id_best_seller)
+                    $('#nume_best_seller').val(result.data.nume_best_seller)
+                   
+                }).catch(function(err) {
+                    console.log(err)
+                    alert('Could not find resource')
+                })
+            }
+            
+            function deleteCarti(id) {
+                axios.delete('/Best_seller/'+id).then(function(result) {
+                    showCarti()
+                }).catch(function(err) {
+                    alert('Resource could not delete resource')
+                }) 
+            }
+            
+            $(document).ready(function() {
+                console.log('Hello from JQuery')
+                showCarti()
+            })
+            
+        </script> 
+    </body>
+</html>
+

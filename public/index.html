@@ -1,0 +1,190 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Biblioteca Personala</title>
+        <style>
+        h1{
+            color:#4A235A;
+        }
+        h2 {
+            color:#633974;
+        }
+        table, th, td {
+            border: 1px solid black;
+        }
+        #table {
+            display: flex;
+            justify-content: space-around;
+        }
+        #viewerCanvas {
+            margin: 0 auto;
+            display: inline-block;
+            margin-bottom: 70px;
+        }
+        </style>
+    </head>
+    <body style="background-color:#bbff99; font-family:georgia; text-align:center;">
+        <h1>Biblioteca personala</h1>
+        <br></br>
+    <p style="color:#A569BD;">In aceasta pagina puteti viziona preferintele utilizatorilor in functie de id-ul acestora</strong></p>
+    <!--<p style="color:#A569BD;"><strong>Proiect realizat de <i>Baduna Nora-Maria, Baduna Dana-Andreea, David Ioan-Bogdan</i> (grupa 1065)</strong></p>-->
+    <br></br>
+
+    <br></br>
+
+    <h2>Lista preferinte useri</h2>
+<!--spatiu tabel date -->
+<div id="table"></div>
+
+<!--formular de salvare carti-->
+ <form onSubmit="saveUser(event)">
+  <input type="hidden" name="id" id="id" /><br />
+ ID User:<br />
+  <input type="number" name="id" id="id" /><br />
+ Gen preferat:<br />
+  <input type="text" name="gen_preferat" id="gen_preferat"/><br />
+ Autor preferat:<br />
+  <input type="text" name="autor_preferat" id="autor_preferat" ><br/>
+ </br>
+  
+  <input type="submit" value="Salveaza preferinte">
+  <input type="reset" value="Renunta">
+</form>
+<br></br>
+<br></br>
+<br></br>
+
+    <!--<h2>Vizualizare Interactiva Carti</h2>-->
+    <!--<br></br>-->
+<!--spatiu viewer Google Books-->
+<!--<div id="viewerCanvas" style="width: 400px; height: 515px;"></div>-->
+
+
+<script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+
+<!--Google Books embedded API-->
+<script type="text/javascript" src="https://www.google.com/books/jsapi.js"></script>
+
+<script 
+    src="https://code.jquery.com/jquery-3.3.1.min.js"
+    integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8="
+    crossorigin="anonymous"></script>
+
+  <script type="text/javascript">
+  
+
+
+    // functie viewer carti prin google books
+    function initialize() {
+    // var viewer = new google.books.DefaultViewer(document.getElementById('viewerCanvas'));
+    // viewer.load('ISBN:1118008189');
+    // nextStep(viewer);
+}
+
+    google.books.setOnLoadCallback(initialize);
+   
+            function showUser() {
+                axios.get('/User_preferences').then(function(results) {
+                    
+                    let html = ` <table style="width:900px; background-color:#ccccff;">
+                            <tr>
+                                <th style="color:#512E5F;">ID User</th>
+                                <th style="color:#512E5F;">Gen Preferat</th>
+                                <th style="color:#512E5F;">Autor Preferat</th> 
+                              
+                            </tr>`
+                    
+                    results.data.forEach(function(element) {
+                        html += `<tr>
+                                    <td style="color:#76448A;">${element.id}</td>
+                                    <td style="color:#76448A;">${element.gen_preferat}</td>
+                                    <td style="color:#76448A;">${element.autor_preferat}</td>
+                                   
+                                    <td>
+                                        <button style="color:#6E2C00;" onClick="editUser(${element.id})">Edit</button>
+                                        <button style="color:#6E2C00;" onClick="deleteUser(${element.id})">Delete</button>
+                                    </td>
+                                </tr>`
+                    })
+                    html += `</table>`
+                    
+                    $('#table').html(html)
+                }).catch(function(error) {
+                    console.log(error)
+                })
+            }
+            
+            function saveUser(event) {
+                event.preventDefault()
+                
+                //get values from fields
+                let id = $('#id').val()
+                let gen_preferat = $('#gen_preferat').val()
+                let autor_preferat = $('#autor_preferat').val()
+            
+                
+                if(id) {
+                    axios.put('/User_preferences/'+id, {
+                        id: id,
+                        gen_preferat: gen_preferat,
+                        autor_preferat: autor_preferat
+                      
+                    }).then(function(result) {
+                        showUser()
+                        $(event.target).trigger("reset")
+                    }).catch(function(err) {
+                        alert('Resource could not be saved!!')
+                    })
+                } else {
+                    //make a request to POST /messages
+                    axios.post('/User_preferences', {
+                       id: id,
+                        gen_preferat: gen_preferat,
+                        autor_preferat: autor_preferat
+                    }).then(function(result) {
+                        showUser()
+                        $(event.target).trigger("reset")
+                    }).catch(function(err) {
+                        alert('Resource could not be saved!!!')
+                    })
+                }
+            }
+            
+            function editUser(id) {
+                //get the values from the server
+                axios.get('/User_preferences/'+id).then(function(result) {
+                    //display values in the form
+                    $('#id').val(result.data.id)
+                    $('#gen_preferat').val(result.data.gen_preferat)
+                    $('#autor_preferat').val(result.data.autor_preferat)
+                   
+                }).catch(function(err) {
+                    console.log(err)
+                    alert('Could not find resource')
+                })
+            }
+            
+            function deleteUser(id) {
+                axios.delete('/User_preferences/'+id).then(function(result) {
+                    showUser()
+                }).catch(function(err) {
+                    alert('Resource could not delete resource')
+                }) 
+            }
+            
+            $(document).ready(function() {
+                console.log('Hello from JQuery')
+                showUser()
+            })
+            
+        </script> 
+        
+   
+
+    <div style="position: fixed; bottom: 5px" >
+    <strong>The HEROES: <i>Baduna Nora-Maria, Baduna Dana-Andreea, David Ioan-Bogdan</i> (grupa 1065)</strong> 
+    </div>
+</div>
+    </body>
+</html>
+

@@ -3,7 +3,7 @@ const Sequelize = require("sequelize")
 
 const app = express()
 
-// app.use('/', express.static('public'))
+app.use('/', express.static('public'))
 
 const sequelize = new Sequelize('biblioteca', 'root', '', {
     dialect: 'mysql',
